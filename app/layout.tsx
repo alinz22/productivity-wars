@@ -11,6 +11,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        {/* Prevent theme flash on load */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})()` }} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

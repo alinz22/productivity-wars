@@ -9,7 +9,7 @@ import type { PlayerClass } from '@/lib/supabase'
 import Leaderboard from '@/components/Leaderboard'
 import TaskList from '@/components/TaskList'
 import TauntFeed from '@/components/TauntFeed'
-import AddTaskModal from '@/components/AddTaskModal'
+import AddTaskModal, { type TaskFormData } from '@/components/AddTaskModal'
 import TauntModal from '@/components/TauntModal'
 import XpFloater from '@/components/XpFloater'
 import AchievementToast from '@/components/AchievementToast'
@@ -17,6 +17,9 @@ import PomodoroTimer from '@/components/PomodoroTimer'
 import FriendsPanel from '@/components/FriendsPanel'
 import GoalsTab from '@/components/GoalsTab'
 import HabitsTab from '@/components/HabitsTab'
+import ThemeToggle from '@/components/ThemeToggle'
+import TemplatesModal from '@/components/TemplatesModal'
+import Link from 'next/link'
 import { playTaskComplete, playAchievement, playPomodoroDone, playTauntReceived } from '@/lib/sounds'
 
 interface XpEvent { id: number; amount: number }
@@ -44,6 +47,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   const [isLive, setIsLive] = useState(false)
   const [activeTab, setActiveTab] = useState<'quests' | 'goals' | 'habits'>('quests')
   const [goals, setGoals] = useState<Goal[]>([])
+  const [showTemplates, setShowTemplates] = useState(false)
   const xpCounter = useRef(0)
   const achCounter = useRef(0)
 
@@ -187,7 +191,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
     }
   }
 
-  const handleAddTask = async (title: string, difficulty: Difficulty, category: Category, goalId: string | null) => {
+  const handleAddTask = async (data: TaskFormData) => {
     if (!myPlayer) return
     const res = await fetch('/api/tasks', {
       method: 'POST',
@@ -195,10 +199,14 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
       body: JSON.stringify({
         player_id: myPlayer.id,
         session_id: sessionId,
-        title,
-        difficulty,
-        category,
-        goal_id: goalId ?? null,
+        title: data.title,
+        difficulty: data.difficulty,
+        category: data.category,
+        goal_id: data.goalId ?? null,
+        description: data.description ?? null,
+        due_date: data.dueDate ?? null,
+        priority: data.priority ?? null,
+        subtasks: data.subtasks,
       }),
     })
     if (res.ok) {
@@ -214,6 +222,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   const handleStartPomodoro = async (task: Task) => {
     if (!myPlayer) return
     setFocusTask(task)
+    if (task.id === '__free__') return // free session — no DB record
     const res = await fetch('/api/pomodoro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -226,19 +235,18 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   }
 
   const handlePomodoroComplete = async (taskId: string) => {
-    if (!myPlayer || !activePomodoroId) return
+    if (!myPlayer) return
+    playPomodoroDone()
+    const evId = xpCounter.current++
+    setXpEvents(prev => [...prev, { id: evId, amount: 5 }])
+    setTimeout(() => setXpEvents(prev => prev.filter(e => e.id !== evId)), 1300)
+    if (!activePomodoroId || taskId === '__free__') return
     const res = await fetch('/api/pomodoro', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pomodoro_id: activePomodoroId, player_id: myPlayer.id, task_id: taskId }),
     })
-    if (res.ok) {
-      setActivePomodoroId(null)
-      playPomodoroDone()
-      const evId = xpCounter.current++
-      setXpEvents(prev => [...prev, { id: evId, amount: 5 }])
-      setTimeout(() => setXpEvents(prev => prev.filter(e => e.id !== evId)), 1300)
-    }
+    if (res.ok) setActivePomodoroId(null)
   }
 
   const handleTaunt = async (message: string) => {
@@ -337,12 +345,23 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
             </span>
           )}
           <button
+            className="pixel-btn pixel-btn-dark"
+            onClick={() => setFocusTask({ id: '__free__', title: 'FREE SESSION' } as Task)}
+            style={{ fontSize: '8px', padding: '7px 12px' }}
+          >
+            🍅 FOCUS
+          </button>
+          <button
             className="pixel-btn pixel-btn-silver"
             onClick={() => setShowFriends(true)}
             style={{ fontSize: '8px', padding: '7px 12px' }}
           >
             👥 FRIENDS
           </button>
+          <Link href="/stats" style={{ textDecoration: 'none' }}>
+            <button className="pixel-btn pixel-btn-gray" style={{ fontSize: '8px', padding: '7px 12px' }}>📊</button>
+          </Link>
+          <ThemeToggle />
           <button
             className="pixel-btn pixel-btn-gray"
             onClick={() => router.push('/')}
@@ -404,6 +423,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
                 myPlayer={myPlayer}
                 onComplete={handleCompleteTask}
                 onAddTask={() => setShowAddTask(true)}
+                onTemplates={() => setShowTemplates(true)}
                 onFocus={handleStartPomodoro}
                 activePomodoroTaskId={focusTask?.id ?? null}
               />
@@ -447,6 +467,16 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
           onClose={() => setShowAddTask(false)}
         />
       )}
+      {showTemplates && myPlayer && (
+        <TemplatesModal
+          playerClass={myPlayer.class as PlayerClass}
+          onImport={async (tasks) => {
+            for (const t of tasks) await handleAddTask(t)
+            setShowTemplates(false)
+          }}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
       {showTaunt && <TauntModal onSend={handleTaunt} onClose={() => setShowTaunt(false)} />}
 
       {focusTask && (
@@ -471,6 +501,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
           setAchievementEvents(prev => prev.filter(a => a.id !== e.id))
         } />
       ))}
+
     </div>
   )
 }

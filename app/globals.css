@@ -17,6 +17,17 @@
   --text-dim: #7a7a9a;
 }
 
+/* Light mode override */
+:root[data-theme="light"] {
+  --bg: #f0ece0;
+  --panel: #e8e2d4;
+  --border: #c0b8a0;
+  --text: #1a1614;
+  --text-dim: #6b6358;
+  --neon-green: #16a34a;
+  --neon-cyan: #6b7280;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {

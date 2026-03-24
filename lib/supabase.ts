@@ -41,6 +41,18 @@ export interface Task {
   created_at: string
   pomodoro_count: number
   goal_id: string | null
+  description?: string | null
+  due_date?: string | null
+  priority?: 'p1' | 'p2' | 'p3' | null
+}
+
+export interface TaskSubtask {
+  id: string
+  task_id: string
+  title: string
+  completed: boolean
+  position: number
+  created_at: string
 }
 
 export interface Taunt {
