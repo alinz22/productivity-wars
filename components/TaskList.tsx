@@ -46,14 +46,14 @@ export default function TaskList({ tasks, myPlayer, onComplete, onAddTask, onFoc
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <div>
-          <h2 className="glow-mag" style={{ fontSize: '10px', letterSpacing: '2px' }}>
+          <h2 className="glow-gold" style={{ fontSize: '11px', letterSpacing: '2px' }}>
             ▸ YOUR QUESTS
           </h2>
           <div style={{ fontSize: '7px', color: classDef.color, marginTop: '4px' }}>
             {classDef.icon} {classDef.name} · 2x on {classDef.affinity.toUpperCase()}
           </div>
         </div>
-        <button className="pixel-btn pixel-btn-green" onClick={onAddTask} style={{ fontSize: '8px' }}>
+        <button className="pixel-btn pixel-btn-gold" onClick={onAddTask} style={{ fontSize: '9px' }}>
           + NEW QUEST
         </button>
       </div>
@@ -63,16 +63,14 @@ export default function TaskList({ tasks, myPlayer, onComplete, onAddTask, onFoc
           className="pixel-border"
           style={{
             background: 'var(--panel)',
-            padding: '24px',
+            padding: '36px 24px',
             textAlign: 'center',
-            color: 'var(--text-dim)',
-            fontSize: '8px',
-            lineHeight: '2.5',
+            lineHeight: '2',
           }}
         >
-          NO QUESTS YET.
-          <br />
-          ADD ONE TO START EARNING XP!
+          <div style={{ fontSize: '28px', marginBottom: '16px' }}>⚔</div>
+          <div style={{ color: 'var(--gold)', fontSize: '10px', marginBottom: '10px' }}>NO ACTIVE QUESTS</div>
+          <div style={{ color: 'var(--text-dim)', fontSize: '8px' }}>Your legend begins with a single task.</div>
         </div>
       )}
 
@@ -101,21 +99,21 @@ export default function TaskList({ tasks, myPlayer, onComplete, onAddTask, onFoc
               }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '9px', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '10px', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {task.title}
                 </div>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span className={DIFF_CLASS[task.difficulty as Difficulty]} style={{ fontSize: '7px' }}>
+                  <span className={DIFF_CLASS[task.difficulty as Difficulty]} style={{ fontSize: '8px' }}>
                     [{DIFF_LABEL[task.difficulty as Difficulty]}]
                   </span>
-                  <span style={{ color: catDef.color, fontSize: '7px' }}>
+                  <span style={{ color: catDef.color, fontSize: '8px' }}>
                     {catDef.icon} {catDef.label}
                   </span>
-                  <span style={{ color: isBonus ? 'var(--neon-yellow)' : 'var(--text-dim)', fontSize: '7px' }}>
+                  <span style={{ color: isBonus ? 'var(--gold)' : 'var(--text-dim)', fontSize: '8px' }}>
                     +{xp} XP{isBonus ? ' ★' : ''}
                   </span>
                   {task.pomodoro_count > 0 && (
-                    <span style={{ color: 'var(--neon-magenta)', fontSize: '7px' }}>
+                    <span style={{ color: 'var(--ember)', fontSize: '8px' }}>
                       🍅×{task.pomodoro_count}
                     </span>
                   )}
@@ -131,10 +129,10 @@ export default function TaskList({ tasks, myPlayer, onComplete, onAddTask, onFoc
                   {activePomodoroTaskId === task.id ? '🍅 FOCUS' : '🍅'}
                 </button>
                 <button
-                  className="pixel-btn pixel-btn-cyan"
+                  className="pixel-btn pixel-btn-gold"
                   onClick={() => handleDone(task)}
                   disabled={completing === task.id}
-                  style={{ fontSize: '7px', padding: '7px 10px' }}
+                  style={{ fontSize: '8px', padding: '8px 12px' }}
                 >
                   ✓ DONE
                 </button>
@@ -166,10 +164,10 @@ export default function TaskList({ tasks, myPlayer, onComplete, onAddTask, onFoc
                     alignItems: 'center',
                     gap: '10px',
                     opacity: 0.5,
-                    borderLeft: '3px solid var(--neon-green)',
+                    borderLeft: '3px solid var(--gold)',
                   }}
                 >
-                  <span style={{ color: 'var(--neon-green)', fontSize: '10px' }}>✓</span>
+                  <span style={{ color: 'var(--gold)', fontSize: '10px' }}>✓</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: '8px', textDecoration: 'line-through', color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {task.title}

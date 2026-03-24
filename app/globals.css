@@ -2,15 +2,19 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0a0f;
-  --panel: #12121a;
-  --border: #2a2a3a;
-  --neon-green: #00ff88;
-  --neon-cyan: #00d4ff;
-  --neon-magenta: #ff00aa;
-  --neon-yellow: #ffee00;
-  --text: #e0e0f0;
-  --text-dim: #6060a0;
+  --bg: #0d0f1a;
+  --panel: #141828;
+  --border: #2a2f4a;
+  --gold: #f5c842;
+  --crimson: #c0392b;
+  --silver: #a8b8c8;
+  --ember: #f97316;
+  --neon-green: #22c55e;
+  --neon-cyan: #a8b8c8;
+  --neon-magenta: #c0392b;
+  --neon-yellow: #f5c842;
+  --text: #e8e4d4;
+  --text-dim: #7a7a9a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,7 +23,7 @@ body {
   background-color: var(--bg);
   color: var(--text);
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.8;
   min-height: 100vh;
   overflow-x: hidden;
@@ -34,8 +38,8 @@ body::after {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.07) 2px,
-    rgba(0, 0, 0, 0.07) 4px
+    rgba(0, 0, 0, 0.04) 2px,
+    rgba(0, 0, 0, 0.04) 4px
   );
   pointer-events: none;
   z-index: 9999;
@@ -49,38 +53,48 @@ body::after {
 .pixel-border-green {
   box-shadow: -2px 0 0 0 var(--neon-green), 2px 0 0 0 var(--neon-green),
     0 -2px 0 0 var(--neon-green), 0 2px 0 0 var(--neon-green),
-    0 0 14px rgba(0, 255, 136, 0.35);
+    0 0 14px rgba(34, 197, 94, 0.3);
+}
+.pixel-border-gold {
+  box-shadow: -2px 0 0 0 var(--gold), 2px 0 0 0 var(--gold),
+    0 -2px 0 0 var(--gold), 0 2px 0 0 var(--gold),
+    0 0 14px rgba(245, 200, 66, 0.3);
+}
+.pixel-border-crimson {
+  box-shadow: -2px 0 0 0 var(--crimson), 2px 0 0 0 var(--crimson),
+    0 -2px 0 0 var(--crimson), 0 2px 0 0 var(--crimson),
+    0 0 14px rgba(192, 57, 43, 0.3);
 }
 .pixel-border-cyan {
-  box-shadow: -2px 0 0 0 var(--neon-cyan), 2px 0 0 0 var(--neon-cyan),
-    0 -2px 0 0 var(--neon-cyan), 0 2px 0 0 var(--neon-cyan),
-    0 0 14px rgba(0, 212, 255, 0.35);
+  box-shadow: -2px 0 0 0 var(--silver), 2px 0 0 0 var(--silver),
+    0 -2px 0 0 var(--silver), 0 2px 0 0 var(--silver),
+    0 0 14px rgba(168, 184, 200, 0.3);
 }
 .pixel-border-magenta {
-  box-shadow: -2px 0 0 0 var(--neon-magenta), 2px 0 0 0 var(--neon-magenta),
-    0 -2px 0 0 var(--neon-magenta), 0 2px 0 0 var(--neon-magenta),
-    0 0 14px rgba(255, 0, 170, 0.35);
+  box-shadow: -2px 0 0 0 var(--crimson), 2px 0 0 0 var(--crimson),
+    0 -2px 0 0 var(--crimson), 0 2px 0 0 var(--crimson),
+    0 0 14px rgba(192, 57, 43, 0.3);
 }
 
 /* Pixel input */
 .pixel-input {
   background: var(--panel);
   border: none;
-  color: var(--neon-green);
+  color: var(--gold);
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 11px;
   padding: 12px 14px;
   outline: none;
   width: 100%;
-  caret-color: var(--neon-green);
+  caret-color: var(--gold);
 }
 .pixel-input::placeholder { color: var(--text-dim); }
 
 /* Pixel buttons */
 .pixel-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  padding: 10px 18px;
+  font-size: 10px;
+  padding: 11px 20px;
   cursor: pointer;
   border: none;
   transition: filter 0.1s;
@@ -91,43 +105,68 @@ body::after {
 .pixel-btn-green {
   background: var(--neon-green);
   color: #000;
-  box-shadow: 4px 4px 0 #006b3a;
+  box-shadow: 4px 4px 0 #15803d;
 }
 .pixel-btn-green:hover { filter: brightness(1.15); }
 
-.pixel-btn-cyan {
-  background: var(--neon-cyan);
-  color: #000;
-  box-shadow: 4px 4px 0 #006b80;
+.pixel-btn-gold {
+  background: var(--gold);
+  color: #1a1200;
+  box-shadow: 4px 4px 0 #a07800;
 }
-.pixel-btn-cyan:hover { filter: brightness(1.15); }
+.pixel-btn-gold:hover { filter: brightness(1.1); }
+
+.pixel-btn-crimson {
+  background: var(--crimson);
+  color: #fff;
+  box-shadow: 4px 4px 0 #7b1d15;
+}
+.pixel-btn-crimson:hover { filter: brightness(1.15); }
+
+.pixel-btn-silver {
+  background: var(--silver);
+  color: #0d0f1a;
+  box-shadow: 4px 4px 0 #6a7a8a;
+}
+.pixel-btn-silver:hover { filter: brightness(1.1); }
+
+.pixel-btn-cyan {
+  background: var(--silver);
+  color: #0d0f1a;
+  box-shadow: 4px 4px 0 #6a7a8a;
+}
+.pixel-btn-cyan:hover { filter: brightness(1.1); }
 
 .pixel-btn-magenta {
-  background: var(--neon-magenta);
+  background: var(--crimson);
   color: #fff;
-  box-shadow: 4px 4px 0 #7a0052;
+  box-shadow: 4px 4px 0 #7b1d15;
 }
 .pixel-btn-magenta:hover { filter: brightness(1.15); }
 
 .pixel-btn-gray {
-  background: #1e1e2e;
+  background: #1e2238;
   color: var(--text-dim);
-  box-shadow: 4px 4px 0 #0a0a14;
+  box-shadow: 4px 4px 0 #0d0f1a;
 }
 .pixel-btn-gray:hover { filter: brightness(1.4); }
 
 .pixel-btn-dark {
-  background: #2a2a3a;
+  background: #232840;
   color: var(--text);
-  box-shadow: 3px 3px 0 #0a0a14;
+  box-shadow: 3px 3px 0 #0d0f1a;
 }
 .pixel-btn-dark:hover { filter: brightness(1.3); }
 
 /* Glow text */
-.glow-green { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green), 0 0 24px rgba(0,255,136,0.4); }
-.glow-cyan  { color: var(--neon-cyan);  text-shadow: 0 0 10px var(--neon-cyan),  0 0 24px rgba(0,212,255,0.4); }
-.glow-mag   { color: var(--neon-magenta); text-shadow: 0 0 10px var(--neon-magenta), 0 0 24px rgba(255,0,170,0.4); }
-.glow-yellow { color: var(--neon-yellow); text-shadow: 0 0 10px var(--neon-yellow), 0 0 24px rgba(255,238,0,0.4); }
+.glow-green  { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green), 0 0 24px rgba(34,197,94,0.4); }
+.glow-gold   { color: var(--gold); text-shadow: 0 0 10px var(--gold), 0 0 24px rgba(245,200,66,0.4); }
+.glow-crimson { color: var(--crimson); text-shadow: 0 0 10px var(--crimson), 0 0 24px rgba(192,57,43,0.4); }
+.glow-silver { color: var(--silver); text-shadow: 0 0 8px var(--silver), 0 0 20px rgba(168,184,200,0.35); }
+.glow-ember  { color: var(--ember); text-shadow: 0 0 10px var(--ember), 0 0 24px rgba(249,115,22,0.4); }
+.glow-cyan   { color: var(--silver); text-shadow: 0 0 8px var(--silver), 0 0 20px rgba(168,184,200,0.35); }
+.glow-mag    { color: var(--crimson); text-shadow: 0 0 10px var(--crimson), 0 0 24px rgba(192,57,43,0.4); }
+.glow-yellow { color: var(--gold); text-shadow: 0 0 10px var(--gold), 0 0 24px rgba(245,200,66,0.4); }
 
 /* Animations */
 @keyframes xpFloat {
@@ -139,8 +178,8 @@ body::after {
   position: absolute;
   pointer-events: none;
   font-size: 12px;
-  color: var(--neon-yellow);
-  text-shadow: 0 0 8px var(--neon-yellow);
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold);
   white-space: nowrap;
   z-index: 200;
   font-family: 'Press Start 2P', monospace;
@@ -185,9 +224,9 @@ body::after {
 ::-webkit-scrollbar-thumb { background: var(--border); }
 
 /* Difficulty badges */
-.diff-easy   { color: var(--neon-green);   }
-.diff-medium { color: var(--neon-yellow);  }
-.diff-hard   { color: var(--neon-magenta); }
+.diff-easy   { color: var(--neon-green); }
+.diff-medium { color: var(--gold); }
+.diff-hard   { color: var(--crimson); }
 
 /* Modal overlay */
 .modal-overlay {

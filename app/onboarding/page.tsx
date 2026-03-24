@@ -57,7 +57,7 @@ export default function OnboardingPage() {
         <div style={{ color: 'var(--text-dim)', fontSize: '8px', letterSpacing: '3px', marginBottom: '12px' }}>
           NEW HERO REGISTRATION
         </div>
-        <h1 className="glow-cyan" style={{ fontSize: '18px', letterSpacing: '3px' }}>
+        <h1 className="glow-gold" style={{ fontSize: '18px', letterSpacing: '3px' }}>
           CREATE YOUR CHARACTER
         </h1>
       </div>
@@ -65,10 +65,10 @@ export default function OnboardingPage() {
       {/* Step 1: Username */}
       {step === 'username' && (
         <div
-          className="pixel-border-cyan fade-in"
+          className="pixel-border-gold fade-in"
           style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '440px' }}
         >
-          <div style={{ marginBottom: '8px', color: 'var(--neon-cyan)', fontSize: '8px', letterSpacing: '2px' }}>
+          <div style={{ marginBottom: '8px', color: 'var(--gold)', fontSize: '8px', letterSpacing: '2px' }}>
             STEP 1 OF 2 — CHOOSE YOUR NAME
           </div>
           <div style={{ color: 'var(--text-dim)', fontSize: '7px', marginBottom: '24px' }}>
@@ -93,11 +93,11 @@ export default function OnboardingPage() {
           </div>
 
           {error && (
-            <div className="glow-mag" style={{ marginBottom: '12px', fontSize: '8px' }}>!! {error} !!</div>
+            <div className="glow-crimson" style={{ marginBottom: '12px', fontSize: '8px' }}>!! {error} !!</div>
           )}
 
           <button
-            className="pixel-btn pixel-btn-green"
+            className="pixel-btn pixel-btn-gold"
             onClick={handleUsernameNext}
             style={{ width: '100%', fontSize: '10px', padding: '14px' }}
           >
@@ -109,10 +109,10 @@ export default function OnboardingPage() {
       {/* Step 2: Class */}
       {step === 'class' && (
         <div
-          className="pixel-border-cyan fade-in"
+          className="pixel-border-gold fade-in"
           style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '520px' }}
         >
-          <div style={{ marginBottom: '8px', color: 'var(--neon-cyan)', fontSize: '8px', letterSpacing: '2px' }}>
+          <div style={{ marginBottom: '8px', color: 'var(--gold)', fontSize: '8px', letterSpacing: '2px' }}>
             STEP 2 OF 2 — CHOOSE YOUR CLASS
           </div>
           <div style={{ color: 'var(--text-dim)', fontSize: '7px', marginBottom: '24px' }}>
@@ -135,7 +135,7 @@ export default function OnboardingPage() {
                     textAlign: 'left',
                     transition: 'background 0.15s',
                   }}
-                  className={isSelected ? 'pixel-border-green' : 'pixel-border'}
+                  className={isSelected ? 'pixel-border-gold' : 'pixel-border'}
                 >
                   <div style={{ fontSize: '20px', marginBottom: '8px' }}>{cls.icon}</div>
                   <div style={{ fontSize: '9px', color: cls.color, marginBottom: '6px' }}>
@@ -163,7 +163,7 @@ export default function OnboardingPage() {
           </div>
 
           {error && (
-            <div className="glow-mag" style={{ marginBottom: '12px', fontSize: '8px' }}>!! {error} !!</div>
+            <div className="glow-crimson" style={{ marginBottom: '12px', fontSize: '8px' }}>!! {error} !!</div>
           )}
 
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -175,7 +175,7 @@ export default function OnboardingPage() {
               ← BACK
             </button>
             <button
-              className="pixel-btn pixel-btn-green"
+              className="pixel-btn pixel-btn-gold"
               onClick={handleSubmit}
               disabled={loading}
               style={{ flex: 2, fontSize: '9px', padding: '12px', opacity: loading ? 0.7 : 1 }}

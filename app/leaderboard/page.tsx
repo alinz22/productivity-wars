@@ -34,7 +34,7 @@ export default function GlobalLeaderboardPage() {
           <div style={{ color: 'var(--text-dim)', fontSize: '8px', letterSpacing: '3px', marginBottom: '8px' }}>
             ALL-TIME RECORDS
           </div>
-          <h1 className="glow-yellow" style={{ fontSize: '16px', letterSpacing: '3px' }}>
+          <h1 className="glow-gold" style={{ fontSize: '16px', letterSpacing: '3px' }}>
             🏆 HALL OF FAME
           </h1>
         </div>
@@ -68,9 +68,9 @@ export default function GlobalLeaderboardPage() {
           return (
             <div
               key={hero.id}
-              className={`fade-in ${isTop3 ? 'pixel-border-cyan' : 'pixel-border'}`}
+              className={`fade-in ${isTop3 ? 'pixel-border-gold' : 'pixel-border'}`}
               style={{
-                background: isTop3 ? 'rgba(0,212,255,0.05)' : 'var(--panel)',
+                background: isTop3 ? 'rgba(245,200,66,0.07)' : 'var(--panel)',
                 padding: '14px 18px',
                 display: 'flex',
                 alignItems: 'center',

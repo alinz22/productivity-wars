@@ -22,7 +22,11 @@ export default function Leaderboard({ players, myPlayerId }: Props) {
       </h2>
 
       {sorted.length === 0 && (
-        <div style={{ color: 'var(--text-dim)', fontSize: '8px' }}>No players yet...</div>
+        <div className="pixel-border" style={{ background: 'var(--panel)', padding: '32px 20px', textAlign: 'center' }}>
+          <div style={{ fontSize: '24px', marginBottom: '12px' }}>⚔</div>
+          <div style={{ color: 'var(--gold)', fontSize: '9px', marginBottom: '8px' }}>THE ARENA AWAITS</div>
+          <div style={{ color: 'var(--text-dim)', fontSize: '8px', lineHeight: '2' }}>No heroes have entered yet.</div>
+        </div>
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -35,9 +39,9 @@ export default function Leaderboard({ players, myPlayerId }: Props) {
           return (
             <div
               key={player.id}
-              className={`fade-in ${isMe ? 'pixel-border-green' : 'pixel-border'}`}
+              className={`fade-in ${isMe ? 'pixel-border-gold' : 'pixel-border'}`}
               style={{
-                background: isMe ? 'rgba(0,255,136,0.05)' : 'var(--panel)',
+                background: isMe ? 'rgba(245,200,66,0.08)' : 'var(--panel)',
                 padding: '12px',
                 position: 'relative',
               }}
@@ -52,7 +56,7 @@ export default function Leaderboard({ players, myPlayerId }: Props) {
                   <div
                     style={{
                       fontSize: '9px',
-                      color: isMe ? 'var(--neon-green)' : 'var(--text)',
+                      color: isMe ? 'var(--gold)' : 'var(--text)',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -66,7 +70,7 @@ export default function Leaderboard({ players, myPlayerId }: Props) {
                   <div style={{ fontSize: '7px', color: rank.color, marginTop: '2px' }}>
                     {rank.label}
                     {player.in_focus && (
-                      <span style={{ color: 'var(--neon-magenta)', marginLeft: '8px' }}>🍅 FOCUS</span>
+                      <span style={{ color: 'var(--ember)', marginLeft: '8px' }}>🍅 FOCUS</span>
                     )}
                   </div>
                 </div>
@@ -83,11 +87,11 @@ export default function Leaderboard({ players, myPlayerId }: Props) {
                     height: '100%',
                     width: `${barWidth}%`,
                     background: isMe
-                      ? 'var(--neon-green)'
+                      ? 'var(--gold)'
                       : i === 0
                       ? 'var(--neon-yellow)'
                       : cls.color,
-                    boxShadow: isMe ? '0 0 8px var(--neon-green)' : undefined,
+                    boxShadow: isMe ? '0 0 8px var(--gold)' : undefined,
                   }}
                 />
               </div>

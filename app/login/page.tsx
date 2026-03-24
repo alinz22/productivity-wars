@@ -44,10 +44,10 @@ export default function LoginPage() {
     >
       <div style={{ textAlign: 'center', marginBottom: '48px' }}>
         <div style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '4px', marginBottom: '14px' }}>
-          INSERT COIN TO PLAY
+          YOUR DESTINY AWAITS
         </div>
         <h1
-          className="glow-green"
+          className="glow-gold"
           style={{ fontSize: 'clamp(20px, 5vw, 36px)', lineHeight: '1.5', letterSpacing: '3px' }}
         >
           PRODUCTIVITY
@@ -60,12 +60,12 @@ export default function LoginPage() {
       </div>
 
       <div
-        className="pixel-border-cyan"
+        className="pixel-border-gold"
         style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '420px' }}
       >
         {sent ? (
           <div style={{ textAlign: 'center' }}>
-            <div className="glow-green" style={{ fontSize: '14px', marginBottom: '16px' }}>✉</div>
+            <div className="glow-gold" style={{ fontSize: '14px', marginBottom: '16px' }}>✉</div>
             <div style={{ fontSize: '9px', lineHeight: '2', marginBottom: '12px' }}>
               MAGIC LINK SENT!
             </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <div style={{ marginBottom: '24px' }}>
               <label style={{
                 display: 'block',
-                color: 'var(--neon-cyan)',
+                color: 'var(--gold)',
                 fontSize: '9px',
                 marginBottom: '10px',
                 letterSpacing: '2px',
@@ -106,13 +106,13 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="glow-mag" style={{ marginBottom: '16px', fontSize: '8px', textAlign: 'center' }}>
+              <div className="glow-crimson" style={{ marginBottom: '16px', fontSize: '8px', textAlign: 'center' }}>
                 !! {error} !!
               </div>
             )}
 
             <button
-              className="pixel-btn pixel-btn-green"
+              className="pixel-btn pixel-btn-gold"
               onClick={handleLogin}
               disabled={loading}
               style={{ width: '100%', fontSize: '10px', padding: '14px', opacity: loading ? 0.7 : 1 }}

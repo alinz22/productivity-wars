@@ -272,7 +272,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="glow-green pulse-glow" style={{ fontSize: '14px', letterSpacing: '3px' }}>LOADING...</div>
+        <div className="glow-gold pulse-glow" style={{ fontSize: '14px', letterSpacing: '3px' }}>LOADING...</div>
       </div>
     )
   }
@@ -280,7 +280,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   if (notInSession) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
-        <div className="glow-mag" style={{ fontSize: '10px' }}>NOT IN THIS SESSION</div>
+        <div className="glow-crimson" style={{ fontSize: '10px' }}>NOT IN THIS SESSION</div>
         <div style={{ color: 'var(--text-dim)', fontSize: '8px' }}>You have not joined this battle yet.</div>
         <button className="pixel-btn pixel-btn-green" onClick={() => router.push('/')} style={{ fontSize: '8px' }}>
           ← BACK TO LOBBY
@@ -304,44 +304,44 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
           gap: '8px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span className="glow-green" style={{ fontSize: '12px', letterSpacing: '2px' }}>
-            PRODUCTIVITY WARS
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <span className="glow-gold" style={{ fontSize: '12px', letterSpacing: '2px' }}>
+            ⚔ PROD WARS
           </span>
           <InviteCodeDisplay sessionId={sessionId} />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           {isLive && (
-            <span style={{ fontSize: '7px', color: 'var(--neon-green)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ fontSize: '8px', color: 'var(--neon-green)', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span className="pulse-glow">●</span> LIVE
             </span>
           )}
-          {myPlayer && myPlayer.streak > 0 && (
-            <span style={{ fontSize: '8px', color: 'var(--neon-yellow)' }}>
-              🔥 {myPlayer.streak}d STREAK
-            </span>
-          )}
-          {rank && (
-            <span style={{ fontSize: '7px', color: rank.color }}>
-              [{rank.label}]
-            </span>
-          )}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           {classDef && myPlayer && (
-            <span style={{ fontSize: '8px', color: classDef.color }}>
+            <span style={{ fontSize: '9px', color: classDef.color }}>
               {classDef.icon} {myPlayer.name}
             </span>
           )}
+          {rank && (
+            <span style={{ fontSize: '8px', color: rank.color, opacity: 0.9 }}>
+              {rank.label}
+            </span>
+          )}
+          {myPlayer && myPlayer.streak > 0 && (
+            <span style={{ fontSize: '9px', color: 'var(--ember)' }}>
+              🔥 {myPlayer.streak}d
+            </span>
+          )}
           <button
-            className="pixel-btn pixel-btn-cyan"
+            className="pixel-btn pixel-btn-silver"
             onClick={() => setShowFriends(true)}
-            style={{ fontSize: '7px', padding: '6px 10px' }}
+            style={{ fontSize: '8px', padding: '7px 12px' }}
           >
             👥 FRIENDS
           </button>
           <button
             className="pixel-btn pixel-btn-gray"
             onClick={() => router.push('/')}
-            style={{ fontSize: '7px', padding: '6px 10px' }}
+            style={{ fontSize: '8px', padding: '7px 12px' }}
           >
             QUIT
           </button>
@@ -390,7 +390,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
           }}
         >
           <button
-            className="pixel-btn pixel-btn-magenta shake"
+            className="pixel-btn pixel-btn-crimson"
             onClick={() => setShowTaunt(true)}
             style={{ fontSize: '8px', flexShrink: 0 }}
           >

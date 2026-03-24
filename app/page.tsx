@@ -87,9 +87,9 @@ export default function LobbyPage() {
       {/* Title */}
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <div style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '4px', marginBottom: '14px' }}>
-          INSERT COIN TO PLAY
+          CHOOSE YOUR DESTINY
         </div>
-        <h1 className="glow-green" style={{ fontSize: 'clamp(20px, 5vw, 36px)', lineHeight: '1.5', letterSpacing: '3px' }}>
+        <h1 className="glow-gold" style={{ fontSize: 'clamp(20px, 5vw, 36px)', lineHeight: '1.5', letterSpacing: '3px' }}>
           PRODUCTIVITY
           <br />
           WARS
@@ -99,7 +99,7 @@ export default function LobbyPage() {
       {/* Hero card */}
       {profile && classDef && (
         <div
-          className="pixel-border fade-in"
+          className="pixel-border-gold fade-in"
           style={{
             background: 'var(--panel)',
             padding: '16px 20px',
@@ -135,14 +135,14 @@ export default function LobbyPage() {
       >
         {/* Create */}
         <div style={{ marginBottom: '28px' }}>
-          <div style={{ color: 'var(--neon-cyan)', fontSize: '8px', letterSpacing: '2px', marginBottom: '12px' }}>
+          <div style={{ color: 'var(--gold)', fontSize: '8px', letterSpacing: '2px', marginBottom: '12px' }}>
             START A NEW SESSION
           </div>
           <div style={{ color: 'var(--text-dim)', fontSize: '7px', marginBottom: '14px', lineHeight: '2' }}>
             Create a battle arena and share the invite code with rivals.
           </div>
           <button
-            className="pixel-btn pixel-btn-green"
+            className="pixel-btn pixel-btn-gold"
             onClick={handleCreate}
             disabled={creating}
             style={{ width: '100%', fontSize: '10px', padding: '14px', opacity: creating ? 0.7 : 1 }}
@@ -152,7 +152,7 @@ export default function LobbyPage() {
         </div>
 
         <div style={{ borderTop: '2px solid var(--border)', paddingTop: '28px' }}>
-          <div style={{ color: 'var(--neon-magenta)', fontSize: '8px', letterSpacing: '2px', marginBottom: '12px' }}>
+          <div style={{ color: 'var(--silver)', fontSize: '8px', letterSpacing: '2px', marginBottom: '12px' }}>
             JOIN WITH INVITE CODE
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -168,7 +168,7 @@ export default function LobbyPage() {
               />
             </div>
             <button
-              className="pixel-btn pixel-btn-magenta"
+              className="pixel-btn pixel-btn-silver"
               onClick={handleJoin}
               disabled={joining}
               style={{ fontSize: '8px', opacity: joining ? 0.7 : 1 }}
@@ -179,7 +179,7 @@ export default function LobbyPage() {
         </div>
 
         {error && (
-          <div className="glow-mag" style={{ marginTop: '16px', fontSize: '8px', textAlign: 'center' }}>
+          <div className="glow-crimson" style={{ marginTop: '16px', fontSize: '8px', textAlign: 'center' }}>
             !! {error} !!
           </div>
         )}
