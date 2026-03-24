@@ -3,7 +3,7 @@
 import { use, useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
-import type { Player, Task, Taunt, Difficulty, Category } from '@/lib/supabase'
+import type { Player, Task, Taunt, Difficulty, Category, Goal } from '@/lib/supabase'
 import { getXpForTask, getRank, getClassDef } from '@/lib/classes'
 import type { PlayerClass } from '@/lib/supabase'
 import Leaderboard from '@/components/Leaderboard'
@@ -15,6 +15,8 @@ import XpFloater from '@/components/XpFloater'
 import AchievementToast from '@/components/AchievementToast'
 import PomodoroTimer from '@/components/PomodoroTimer'
 import FriendsPanel from '@/components/FriendsPanel'
+import GoalsTab from '@/components/GoalsTab'
+import HabitsTab from '@/components/HabitsTab'
 import { playTaskComplete, playAchievement, playPomodoroDone, playTauntReceived } from '@/lib/sounds'
 
 interface XpEvent { id: number; amount: number }
@@ -40,6 +42,8 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
   const [loading, setLoading] = useState(true)
   const [notInSession, setNotInSession] = useState(false)
   const [isLive, setIsLive] = useState(false)
+  const [activeTab, setActiveTab] = useState<'quests' | 'goals' | 'habits'>('quests')
+  const [goals, setGoals] = useState<Goal[]>([])
   const xpCounter = useRef(0)
   const achCounter = useRef(0)
 
@@ -183,7 +187,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
     }
   }
 
-  const handleAddTask = async (title: string, difficulty: Difficulty, category: Category) => {
+  const handleAddTask = async (title: string, difficulty: Difficulty, category: Category, goalId: string | null) => {
     if (!myPlayer) return
     const res = await fetch('/api/tasks', {
       method: 'POST',
@@ -194,6 +198,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
         title,
         difficulty,
         category,
+        goal_id: goalId ?? null,
       }),
     })
     if (res.ok) {
@@ -363,19 +368,53 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
           <Leaderboard players={players} myPlayerId={myPlayer?.id ?? ''} />
         </div>
 
-        {/* Right top — Tasks */}
-        <div style={{ overflow: 'auto', padding: '20px', position: 'relative' }}>
-          <XpFloater events={xpEvents} />
-          {myPlayer && (
-            <TaskList
-              tasks={myTasks}
-              myPlayer={myPlayer}
-              onComplete={handleCompleteTask}
-              onAddTask={() => setShowAddTask(true)}
-              onFocus={handleStartPomodoro}
-              activePomodoroTaskId={focusTask?.id ?? null}
-            />
-          )}
+        {/* Right — Tabbed panel */}
+        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {/* Tab bar */}
+          <div style={{ display: 'flex', borderBottom: '2px solid var(--border)', background: 'var(--panel)', flexShrink: 0 }}>
+            {(['quests', 'goals', 'habits'] as const).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  flex: 1,
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: '8px',
+                  padding: '11px 6px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: activeTab === tab ? 'rgba(245,200,66,0.08)' : 'transparent',
+                  color: activeTab === tab ? 'var(--gold)' : 'var(--text-dim)',
+                  borderBottom: activeTab === tab ? '2px solid var(--gold)' : '2px solid transparent',
+                  marginBottom: '-2px',
+                  transition: 'color 0.15s',
+                }}
+              >
+                {tab === 'quests' ? '⚔ QUESTS' : tab === 'goals' ? '🎯 GOALS' : '⚡ HABITS'}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab content */}
+          <div style={{ overflow: 'auto', padding: '20px', flex: 1, position: 'relative' }}>
+            <XpFloater events={xpEvents} />
+            {activeTab === 'quests' && myPlayer && (
+              <TaskList
+                tasks={myTasks}
+                myPlayer={myPlayer}
+                onComplete={handleCompleteTask}
+                onAddTask={() => setShowAddTask(true)}
+                onFocus={handleStartPomodoro}
+                activePomodoroTaskId={focusTask?.id ?? null}
+              />
+            )}
+            {activeTab === 'goals' && (
+              <GoalsTab userId={authUserId} onGoalsChange={setGoals} />
+            )}
+            {activeTab === 'habits' && (
+              <HabitsTab userId={authUserId} />
+            )}
+          </div>
         </div>
 
         {/* Right bottom — Taunt feed */}
@@ -403,6 +442,7 @@ export default function GamePage({ params }: { params: Promise<{ sessionId: stri
       {showAddTask && myPlayer && (
         <AddTaskModal
           playerClass={myPlayer.class as PlayerClass}
+          goals={goals}
           onAdd={handleAddTask}
           onClose={() => setShowAddTask(false)}
         />

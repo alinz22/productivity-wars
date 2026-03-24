@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import type { Difficulty, Category, PlayerClass } from '@/lib/supabase'
+import type { Difficulty, Category, PlayerClass, Goal } from '@/lib/supabase'
 import { CATEGORIES, getXpForTask, getClassDef } from '@/lib/classes'
 
 interface Props {
   playerClass: PlayerClass
-  onAdd: (title: string, difficulty: Difficulty, category: Category) => void
+  goals?: Goal[]
+  onAdd: (title: string, difficulty: Difficulty, category: Category, goalId: string | null) => void
   onClose: () => void
 }
 
@@ -22,10 +23,11 @@ const DIFF_CLASS: Record<Difficulty, string> = {
   hard: 'diff-hard',
 }
 
-export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
+export default function AddTaskModal({ playerClass, goals, onAdd, onClose }: Props) {
   const [title, setTitle] = useState('')
   const [difficulty, setDifficulty] = useState<Difficulty>('medium')
   const [category, setCategory] = useState<Category>('daily')
+  const [goalId, setGoalId] = useState<string | null>(null)
 
   const classDef = getClassDef(playerClass)
   const xpPreview = getXpForTask(difficulty, category, playerClass)
@@ -34,17 +36,17 @@ export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
   const handleSubmit = () => {
     const t = title.trim()
     if (!t) return
-    onAdd(t, difficulty, category)
+    onAdd(t, difficulty, category, goalId)
   }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
-        className="pixel-border-green fade-in"
+        className="pixel-border-gold fade-in"
         style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '460px' }}
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="glow-green" style={{ fontSize: '11px', marginBottom: '24px', letterSpacing: '2px' }}>
+        <h2 className="glow-gold" style={{ fontSize: '11px', marginBottom: '24px', letterSpacing: '2px' }}>
           NEW QUEST
         </h2>
 
@@ -91,7 +93,7 @@ export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
                     transition: 'background 0.15s',
                     position: 'relative',
                   }}
-                  className={isSelected ? 'pixel-border-green' : 'pixel-border'}
+                  className={isSelected ? 'pixel-border-gold' : 'pixel-border'}
                 >
                   {cat.icon} {cat.label}
                   {isAffinity && (
@@ -126,7 +128,7 @@ export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
                   outline: 'none',
                   transition: 'background 0.15s',
                 }}
-                className={`${DIFF_CLASS[d.value]} ${difficulty === d.value ? 'pixel-border-green' : 'pixel-border'}`}
+                className={`${DIFF_CLASS[d.value]} ${difficulty === d.value ? 'pixel-border-gold' : 'pixel-border'}`}
               >
                 {d.label}
               </button>
@@ -134,13 +136,63 @@ export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
           </div>
         </div>
 
+        {/* Link to Goal */}
+        {goals && goals.length > 0 && (
+          <div style={{ marginBottom: '18px' }}>
+            <label style={{ display: 'block', color: 'var(--silver)', fontSize: '8px', marginBottom: '8px', letterSpacing: '2px' }}>
+              LINK TO GOAL <span style={{ opacity: 0.5 }}>(optional)</span>
+            </label>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setGoalId(null)}
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: '7px',
+                  padding: '8px 10px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: goalId === null ? 'var(--border)' : 'var(--panel)',
+                  color: 'var(--text-dim)',
+                  outline: 'none',
+                }}
+                className={goalId === null ? 'pixel-border-gold' : 'pixel-border'}
+              >
+                NONE
+              </button>
+              {goals.filter(g => g.status === 'active').map(goal => (
+                <button
+                  key={goal.id}
+                  onClick={() => setGoalId(goal.id)}
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: '7px',
+                    padding: '8px 10px',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: goalId === goal.id ? 'rgba(0,0,0,0.6)' : 'var(--panel)',
+                    color: 'var(--gold)',
+                    outline: 'none',
+                    maxWidth: '140px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                  className={goalId === goal.id ? 'pixel-border-gold' : 'pixel-border'}
+                >
+                  {goal.icon} {goal.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* XP Preview */}
         <div
           className="pixel-border"
           style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 14px', marginBottom: '20px', fontSize: '8px' }}
         >
           <span style={{ color: 'var(--text-dim)' }}>XP REWARD: </span>
-          <span style={{ color: 'var(--neon-yellow)' }}>+{xpPreview} XP</span>
+          <span style={{ color: 'var(--gold)' }}>+{xpPreview} XP</span>
           {isBonus && (
             <span style={{ color: classDef.color, marginLeft: '10px', fontSize: '7px' }}>
               {classDef.icon} 2x CLASS BONUS!
@@ -152,7 +204,7 @@ export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
           <button className="pixel-btn pixel-btn-gray" onClick={onClose} style={{ flex: 1 }}>
             CANCEL
           </button>
-          <button className="pixel-btn pixel-btn-green" onClick={handleSubmit} style={{ flex: 1, fontSize: '9px' }}>
+          <button className="pixel-btn pixel-btn-gold" onClick={handleSubmit} style={{ flex: 1, fontSize: '9px' }}>
             ▶ ADD QUEST
           </button>
         </div>

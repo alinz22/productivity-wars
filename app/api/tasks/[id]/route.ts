@@ -65,6 +65,25 @@ export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ i
       .eq('id', player.user_id)
   }
 
+  // Increment goal progress if task is linked to a goal
+  if (task.goal_id) {
+    const { data: goal } = await supabase
+      .from('goals')
+      .select('completed_count, target_tasks')
+      .eq('id', task.goal_id)
+      .single()
+    if (goal) {
+      const newCount = goal.completed_count + 1
+      await supabase
+        .from('goals')
+        .update({
+          completed_count: newCount,
+          status: newCount >= goal.target_tasks ? 'completed' : 'active',
+        })
+        .eq('id', task.goal_id)
+    }
+  }
+
   // Non-blocking achievement check
   checkAchievements(supabase, task.player_id, task.session_id)
 

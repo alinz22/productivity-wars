@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { player_id, session_id, title, difficulty, category } = await req.json()
+  const { player_id, session_id, title, difficulty, category, goal_id } = await req.json()
 
   if (!player_id || !session_id || !title || !difficulty) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
       category: (category ?? 'daily') as Category,
       completed: false,
       pomodoro_count: 0,
+      goal_id: goal_id ?? null,
     })
     .select()
     .single()

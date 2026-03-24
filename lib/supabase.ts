@@ -40,6 +40,7 @@ export interface Task {
   completed: boolean
   created_at: string
   pomodoro_count: number
+  goal_id: string | null
 }
 
 export interface Taunt {
@@ -79,4 +80,35 @@ export interface Pomodoro {
   started_at: string
   completed_at: string | null
   is_active: boolean
+}
+
+export interface Goal {
+  id: string
+  user_id: string
+  title: string
+  description: string | null
+  icon: string
+  target_tasks: number
+  completed_count: number
+  status: 'active' | 'completed' | 'archived'
+  deadline: string | null
+  created_at: string
+}
+
+export interface Habit {
+  id: string
+  user_id: string
+  title: string
+  icon: string
+  target_days: string[]
+  current_streak: number
+  longest_streak: number
+  created_at: string
+}
+
+export interface HabitCompletion {
+  id: string
+  habit_id: string
+  user_id: string
+  completed_date: string
 }
