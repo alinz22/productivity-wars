@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-server'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const supabase = getSupabase()
+  const supabase = await createClient()
   const { id } = await params
+
+  const { data: { user } } = await supabase.auth.getUser()
 
   const [playersRes, tasksRes, tauntsRes] = await Promise.all([
     supabase.from('players').select('*').eq('session_id', id).order('xp', { ascending: false }),
@@ -13,9 +15,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   if (playersRes.error) return NextResponse.json({ error: playersRes.error.message }, { status: 500 })
 
+  const myPlayer = user
+    ? (playersRes.data?.find(p => p.user_id === user.id) ?? null)
+    : null
+
   return NextResponse.json({
     players: playersRes.data,
     tasks: tasksRes.data ?? [],
     taunts: tauntsRes.data ?? [],
+    myPlayer,
   })
 }

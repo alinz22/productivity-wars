@@ -1,36 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabase'
+import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase-server'
 
-export async function POST(req: NextRequest) {
-  const supabase = getSupabase()
-  const { playerNames } = await req.json()
+function generateInviteCode(): string {
+  return Math.random().toString(36).substring(2, 8).toUpperCase()
+}
 
-  if (!playerNames || !Array.isArray(playerNames) || playerNames.length === 0) {
-    return NextResponse.json({ error: 'playerNames required' }, { status: 400 })
+export async function POST() {
+  const supabase = await createClient()
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile) {
+    return NextResponse.json({ error: 'Profile not found — complete onboarding first' }, { status: 404 })
   }
 
   const { data: session, error: sessionError } = await supabase
     .from('sessions')
-    .insert({})
+    .insert({ invite_code: generateInviteCode() })
     .select()
     .single()
 
   if (sessionError) return NextResponse.json({ error: sessionError.message }, { status: 500 })
 
-  const players = playerNames.map((name: string) => ({
-    session_id: session.id,
-    name: name.trim(),
-    xp: 0,
-    streak: 0,
-    last_task_date: null,
-  }))
-
-  const { data: createdPlayers, error: playersError } = await supabase
+  const { data: player, error: playerError } = await supabase
     .from('players')
-    .insert(players)
+    .insert({
+      session_id: session.id,
+      name: profile.username,
+      xp: 0,
+      streak: 0,
+      last_task_date: null,
+      user_id: user.id,
+      class: profile.class,
+      level: 1,
+    })
     .select()
+    .single()
 
-  if (playersError) return NextResponse.json({ error: playersError.message }, { status: 500 })
+  if (playerError) return NextResponse.json({ error: playerError.message }, { status: 500 })
 
-  return NextResponse.json({ session, players: createdPlayers })
+  return NextResponse.json({ session, player })
 }

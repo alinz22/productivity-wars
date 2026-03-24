@@ -1,17 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-server'
+import type { Difficulty, Category } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
-  const supabase = getSupabase()
-  const { player_id, session_id, title, difficulty } = await req.json()
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { player_id, session_id, title, difficulty, category } = await req.json()
 
   if (!player_id || !session_id || !title || !difficulty) {
-    return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
   const { data, error } = await supabase
     .from('tasks')
-    .insert({ player_id, session_id, title, difficulty, completed: false })
+    .insert({
+      player_id,
+      session_id,
+      title,
+      difficulty: difficulty as Difficulty,
+      category: (category ?? 'daily') as Category,
+      completed: false,
+      pomodoro_count: 0,
+    })
     .select()
     .single()
 

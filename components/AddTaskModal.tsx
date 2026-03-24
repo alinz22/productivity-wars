@@ -1,41 +1,55 @@
 'use client'
 
 import { useState } from 'react'
-import type { Difficulty } from '@/lib/supabase'
+import type { Difficulty, Category, PlayerClass } from '@/lib/supabase'
+import { CATEGORIES, getXpForTask, getClassDef } from '@/lib/classes'
 
 interface Props {
-  onAdd: (title: string, difficulty: Difficulty) => void
+  playerClass: PlayerClass
+  onAdd: (title: string, difficulty: Difficulty, category: Category) => void
   onClose: () => void
 }
 
-const DIFFICULTIES: { value: Difficulty; label: string; xp: number; cls: string }[] = [
-  { value: 'easy',   label: 'EASY',   xp: 1, cls: 'diff-easy'   },
-  { value: 'medium', label: 'MEDIUM', xp: 3, cls: 'diff-medium' },
-  { value: 'hard',   label: 'HARD',   xp: 5, cls: 'diff-hard'   },
+const DIFFICULTIES: { value: Difficulty; label: string }[] = [
+  { value: 'easy',   label: 'EASY'   },
+  { value: 'medium', label: 'MEDIUM' },
+  { value: 'hard',   label: 'HARD'   },
 ]
 
-export default function AddTaskModal({ onAdd, onClose }: Props) {
+const DIFF_CLASS: Record<Difficulty, string> = {
+  easy: 'diff-easy',
+  medium: 'diff-medium',
+  hard: 'diff-hard',
+}
+
+export default function AddTaskModal({ playerClass, onAdd, onClose }: Props) {
   const [title, setTitle] = useState('')
   const [difficulty, setDifficulty] = useState<Difficulty>('medium')
+  const [category, setCategory] = useState<Category>('daily')
+
+  const classDef = getClassDef(playerClass)
+  const xpPreview = getXpForTask(difficulty, category, playerClass)
+  const isBonus = classDef.affinity === category && category !== 'daily'
 
   const handleSubmit = () => {
     const t = title.trim()
     if (!t) return
-    onAdd(t, difficulty)
+    onAdd(t, difficulty, category)
   }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
         className="pixel-border-green fade-in"
-        style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '420px' }}
+        style={{ background: 'var(--panel)', padding: '32px', width: '100%', maxWidth: '460px' }}
         onClick={e => e.stopPropagation()}
       >
         <h2 className="glow-green" style={{ fontSize: '11px', marginBottom: '24px', letterSpacing: '2px' }}>
           NEW QUEST
         </h2>
 
-        <div style={{ marginBottom: '20px' }}>
+        {/* Title */}
+        <div style={{ marginBottom: '18px' }}>
           <label style={{ display: 'block', color: 'var(--neon-cyan)', fontSize: '8px', marginBottom: '8px', letterSpacing: '2px' }}>
             QUEST NAME
           </label>
@@ -52,7 +66,47 @@ export default function AddTaskModal({ onAdd, onClose }: Props) {
           </div>
         </div>
 
-        <div style={{ marginBottom: '28px' }}>
+        {/* Category */}
+        <div style={{ marginBottom: '18px' }}>
+          <label style={{ display: 'block', color: 'var(--neon-cyan)', fontSize: '8px', marginBottom: '8px', letterSpacing: '2px' }}>
+            QUEST TYPE
+          </label>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {CATEGORIES.map(cat => {
+              const isSelected = category === cat.id
+              const isAffinity = classDef.affinity === cat.id && cat.id !== 'daily'
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setCategory(cat.id)}
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: '7px',
+                    padding: '8px 10px',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: isSelected ? 'rgba(0,0,0,0.6)' : 'var(--panel)',
+                    color: cat.color,
+                    outline: 'none',
+                    transition: 'background 0.15s',
+                    position: 'relative',
+                  }}
+                  className={isSelected ? 'pixel-border-green' : 'pixel-border'}
+                >
+                  {cat.icon} {cat.label}
+                  {isAffinity && (
+                    <span style={{ color: 'var(--neon-yellow)', fontSize: '6px', display: 'block', marginTop: '2px' }}>
+                      2x XP
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Difficulty */}
+        <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', color: 'var(--neon-cyan)', fontSize: '8px', marginBottom: '8px', letterSpacing: '2px' }}>
             DIFFICULTY
           </label>
@@ -72,14 +126,26 @@ export default function AddTaskModal({ onAdd, onClose }: Props) {
                   outline: 'none',
                   transition: 'background 0.15s',
                 }}
-                className={`${d.cls} ${difficulty === d.value ? 'pixel-border-green' : 'pixel-border'}`}
+                className={`${DIFF_CLASS[d.value]} ${difficulty === d.value ? 'pixel-border-green' : 'pixel-border'}`}
               >
                 {d.label}
-                <br />
-                <span style={{ color: 'var(--neon-yellow)', fontSize: '7px' }}>+{d.xp} XP</span>
               </button>
             ))}
           </div>
+        </div>
+
+        {/* XP Preview */}
+        <div
+          className="pixel-border"
+          style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 14px', marginBottom: '20px', fontSize: '8px' }}
+        >
+          <span style={{ color: 'var(--text-dim)' }}>XP REWARD: </span>
+          <span style={{ color: 'var(--neon-yellow)' }}>+{xpPreview} XP</span>
+          {isBonus && (
+            <span style={{ color: classDef.color, marginLeft: '10px', fontSize: '7px' }}>
+              {classDef.icon} 2x CLASS BONUS!
+            </span>
+          )}
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
